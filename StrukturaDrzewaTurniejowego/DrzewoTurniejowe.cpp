@@ -14,37 +14,19 @@ using namespace std;
 
 // w sumie czy w liściach muszą być indeksy?
 
-int treeSize(int tree_height) {
-  return (int)pow(2, tree_height + 1) - 1;
-}
+#define treeSize(tree_height) int(pow(2, tree_height + 1) - 1)
+#define treeHeight(leaves_size) int(ceil(log2(leaves_size)))
+#define firstLevelsId(level) int(pow(2, level))
+#define lastLevelsId(level) int(pow(2, level + 1) - 1)
+#define parentID(child) int(floor(child / 2))
+#define L_ChildID(parentID) int(parentID * 2)
+#define R_ChildID(parentID) int(2 * parentID + 1)
+#define howMuchNodes(leaves_amount, height) int(leaves_amount - pow(2, height - 1))
 
-int treeHeight(int leaves_size) {
-  return (int)ceil(log2(leaves_size));
-}
-
-int firstLevelsId(int level) {
-  return (int)pow(2, level);
-}
-
-int lastLevelsId(int level) {
-  return firstLevelsId(level + 1) - 1;
-}
-
-int parentID(int child) {
-  return (int)floor(child / 2);
-}
-
-int L_ChildID(int parentID) {
-  return parentID * 2;
-}
-
-int R_ChildID(int parentID) {
-  return L_ChildID(parentID) + 1;
-}
-
-int howMuchNodes(int leaves_amount, int height) {
-  return leaves_amount - pow(2, height - 1);
-}
+//void Visualize
+//void buildNode
+//void generateTreeFromArray
+//void replacemax
 
 void Visualize(int (*tree)[2], int size, int* leaves, int leaves_size) {
   cout << "Array: ";
