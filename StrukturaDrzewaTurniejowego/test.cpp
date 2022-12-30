@@ -1,13 +1,20 @@
 #include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct tree {int mx; int mn;};
+
+vector<tree> tp() {
+  vector<tree> t;
+  tree nt {2, 3};
+  t.push_back(nt);
+  return t;
+}
 
 int main () {
-  int a = 0;
-  int b = 0;
-  b = a++;
-  std::cout << b;
-  b = ++a;
-  std::cout << b;
- 
+ vector<tree> tak = tp();
+ cout << tak[0].mx << endl << tak[0].mn ;
   return 0;
 }
 
