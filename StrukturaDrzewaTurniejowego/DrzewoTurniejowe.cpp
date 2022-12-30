@@ -6,21 +6,15 @@
 #include <random>
 #include <string>
 
-
 using namespace std;
-// index 0, warstwa 0 to root
-// indeksowanie jest zjebane jak wezme i = 1 --> mam 2 i 3, zamiast 3 i 4,
-// musze indeksować drzewo o 1
 
-// w sumie czy w liściach muszą być indeksy?
-
-#define treeSize(tree_height) int(pow(2, tree_height + 1) - 1)
-#define treeHeight(leaves_size) int(ceil(log2(leaves_size)))
-#define firstLevelsId(level) int(pow(2, level))
-#define lastLevelsId(level) int(pow(2, level + 1) - 1)
-#define parentID(child) int(floor(child / 2))
-#define L_ChildID(parentID) int(parentID * 2)
-#define R_ChildID(parentID) int(2 * parentID + 1)
+#define treeHeight(leaves_size) int(ceil(log2(leaves_size)))      // wysokość drzewa = sufit(log2(l)), gdzie l - ilość liści
+#define treeSize(tree_height) int(pow(2, tree_height + 1) - 1)    // rozmiar drzewa = 2^(h+1) + 1, gdzie h - wysokość drzewa
+#define firstLevelsId(n) int(pow(2, n))                           // pierwszy indeks n-tej warstwy = 2^n
+#define lastLevelsId(n) int(pow(2, n + 1) - 1)                    // ostatni indeks n-tej warstwy = 2^(n+1) - 1
+#define parentID(childID) int(floor(childID / 2))                 // indeks rodzica = entier(childID / 2), gdzie childID to indeks dziecka
+#define L_ChildID(parentID) int(parentID * 2)                     // lewe dziecko = 2 * parentId, gdzie parentID to indeks rodzica  
+#define R_ChildID(parentID) int(2 * parentID + 1)                 // prawe dziecko = 2 * parentID + 1, gdzie parentID to indeks rodzica
 #define howMuchNodes(leaves_amount, height) int(leaves_amount - pow(2, height - 1))
 
 //void Visualize
