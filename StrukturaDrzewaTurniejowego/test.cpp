@@ -15,6 +15,12 @@ vector<tree> tp() {
 int main () {
  vector<tree> tak = tp();
  cout << tak[0].mx << endl << tak[0].mn ;
-  return 0;
+
+  int a = 20;
+  do {
+    a = int(a/3);
+    cout <<a <<endl;
+  } while (a > 1);
+ return 0;
 }
 

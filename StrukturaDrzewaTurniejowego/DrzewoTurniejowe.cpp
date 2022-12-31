@@ -1,3 +1,6 @@
+// author: Nikodem Panknin
+// title: Hadian-Sobel algorithm using tournament tree
+
 #include <iostream>
 #include <vector>
 
@@ -21,86 +24,111 @@ struct node { int mx; int mn; };
 struct array { int* l; short int size; };
 
 vector<node> Construct(array* leaves);
+void UpdatePath(vector<node> &tree, short int leaveID);
 void BuildNode(vector<node> &tree, int nodeID);
-void Replacemax(vector<node> &tree, int newMax);
-void Visualize(vector<node> tree, array* leaves, int h);
-
-
-inline vector<node> Construct(array* leaves) {
-  const int h = treeHeight(leaves->size);   // wysokość drzewa
-  const int tSize = treeSize(h) + 1;        // liczba pamięci potrzebnej do zaalokowania pamięci 
-  vector<node> tree(tSize, {0, 0});         // drzewo turniejowe, indexowane od 1
-  int n = firstLevelsId(h - 1);             // (n, m) to przedział przedostatniej warstwy 
-  int m = lastLevelsId(h - 1);
-
-  int nodesAmount = howMuchNodes(leaves->size, h);    // ilość węzłów w przedostatniej warstwy
-  int pivot = 0;
-
-  // od n do n + nodes tworzymy węzły, które jako dzieci mają liście
-  for (int i = n; i <= n + nodesAmount; i ++) { 
-    tree[L_ChildID(i)].mx = leaves->l[pivot ++];
-    tree[R_ChildID(i)].mx = leaves->l[pivot ++];    
-    BuildNode(tree, i);
-  }
-  
-  // w pozostałych (od n + nodes + 1 do m) przechowujemy liście
-  for (int j = n + nodesAmount + 1; j <= m; j ++) tree[j].mx = leaves->l[pivot ++];  
-  // następnie iterujemy od n - 1 do 1 budując kolejne węzły
-  for (int i = n - 1; i > 0; i --) BuildNode(tree, i);
-
-  Visualize(tree, leaves, h);
-  return tree;
-}
-
-void BuildNode(vector<node> &tree, int nodeID) {
-  int LC = L_ChildID(nodeID);
-  int RC = R_ChildID(nodeID);
-  
-  bool LC_isNode = (tree[LC].mn != 0);
-  bool RC_isNode = (tree[RC].mn != 0);
-    
-  int LC_CMP = !LC_isNode ? tree[LC].mx : tree[tree[LC].mx].mx;
-  int RC_CMP = !RC_isNode ? tree[RC].mx : tree[tree[RC].mx].mx;
-
-  if (LC_CMP > RC_CMP) {
-    tree[nodeID].mx = LC_isNode ? tree[LC].mx : LC;
-    tree[nodeID].mn = RC_isNode ? tree[RC].mx : RC;
-  }
-  else {
-    tree[nodeID].mx = RC_isNode ? tree[RC].mx : RC;
-    tree[nodeID].mn = LC_isNode ? tree[LC].mx : LC;
-  }
-}
-
-void Replacemax(vector<node> &tree, int newMax) {
-  cout << "Replacemax";
-}
+int Replacemax(vector<node> &tree, int newMax);
+void Visualize(vector<node> tree, array* leaves);
+array NewRandomArray(short int n);
 
 
 int main() {
-  srand( time(NULL) );
+    short int k = 5;  // k - ile największych elementów zwrócić
+    short int n = 7;  // n - rozmiar tablicy
+    
+    array leaves = NewRandomArray(n);  // tworzenie losowej tablicy o rozmiarze n
+    array temp = {leaves.l, short(n - k + 2)}; 
+    vector<node> tree = Construct(&temp);
+    
+    Visualize(tree, &temp);
+    cout << tree[0].mx << endl; 
+    cout << Replacemax(tree, temp.l[n-k+3]) << endl;
 
-  array leaves;
-  leaves.size = 4 + rand() % 10;
-  leaves.l = new int [leaves.size];
-  for(int i = 0; i < leaves.size; i ++) leaves.l[i] = 100 + rand() % 100; 
-
-  vector<node> tree = Construct(&leaves);
-  
-  delete [] leaves.l;
-  return 0;
+    Visualize(tree, &temp);
+    delete[] leaves.l;
+    return 0;
 }
 
-void Visualize(vector<node> tree, array* leaves, int h) {
+inline vector<node> Construct(array* leaves) {
+  const int h = treeHeight(leaves->size);   // wysokość drzewa
+  const int tSize = treeSize(h) + 1;        // rozmiar drzewa 
+  vector<node> tree(tSize, {0, 0});         // drzewo turniejowe, indexowane od 1
+  tree[0] = {-1, -1};
+
+  int n = firstLevelsId(h - 1), m = lastLevelsId(h - 1); // (n, m) - przedział h-1 warstwy 
+  int nodesAmount = howMuchNodes(leaves->size, h);       // ilość węzłów w h-1 warstwie
+  int pivot = 0;   // zamiast używać pivot, możemy dekrementować nodes amount
+  
+  // od n do n + nodes tworzymy węzły, które jako dzieci mają liście
+  for (int i = n; i <= n + nodesAmount; i ++) {
+    tree[L_ChildID(i)].mx = leaves->l[pivot ++];
+    UpdatePath(tree, L_ChildID(i));
+    tree[R_ChildID(i)].mx = leaves->l[pivot ++];    
+    UpdatePath(tree, R_ChildID(i));
+  }
+  
+  // w pozostałych (od n + nodes + 1 do m) przechowujemy liście
+  for (int j = n + nodesAmount + 1; j <= m; j++) {
+      tree[j].mx = leaves->l[pivot ++];
+      UpdatePath(tree, j);
+  }
+
+  return tree;
+}
+
+void UpdatePath(vector<node> &tree, short int leaveID) {
+  int pivot = leaveID;
+  int LC  = 0, RC = 0;
+  
+  while (pivot > 1) {
+    pivot = parentID(pivot);
+    LC = L_ChildID(pivot);
+    RC = R_ChildID(pivot);
+    
+    if (tree[tree[pivot].mx].mx > tree[leaveID].mx) {
+      cout << "e - "<< tree[tree[pivot].mx].mx<<"_" << tree[leaveID].mx<<endl;
+      tree[pivot].mn = leaveID;
+      break;
+    }
+    else {
+      tree[pivot].mn = tree[pivot].mx;
+      tree[pivot].mx = leaveID;
+    }
+  }
+}
+
+int Replacemax(vector<node> &tree, int newMax) {
+  int oldMax = tree[tree[1].mx].mx;
+  int index = tree[1].mx;
+  
+  tree[tree[1].mx].mx = newMax;
+  UpdatePath(tree, index);
+
+  return oldMax;
+}
+
+void Visualize(vector<node> tree, array* leaves) {
+  const int h = treeHeight(leaves->size);
   cout << "Array: ";
   for (int j = 0; j < leaves->size; j++) cout << leaves->l[j] << ' ';
 
   cout << endl << "Tournament tree: " << endl;
+   
+
   for (int j = 0; j <= h; j ++) {
     for (int i = firstLevelsId(j); i <= lastLevelsId(j); i ++) { 
       cout << i << "|" << tree[i].mx << ":" << tree[i].mn << "\t\t";
     }
     cout << endl;
-  }
+  }  
 }
 
+array NewRandomArray(short int n) {
+    srand(time(NULL));
+
+    array leaves;
+    leaves.size = n;
+    leaves.l = new int[leaves.size];
+    for (int i = 0; i < leaves.size; i++) leaves.l[i] = 10 + rand() % 1000;
+    
+    return leaves;
+}
