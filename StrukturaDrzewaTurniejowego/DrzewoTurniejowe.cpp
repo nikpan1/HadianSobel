@@ -40,7 +40,6 @@ int main() {
     vector<node> tree = Construct(&temp);
     
     Visualize(tree, &temp);
-    cout << tree[0].mx << endl; 
     cout << Replacemax(tree, temp.l[n-k+3]) << endl;
 
     Visualize(tree, &temp);
@@ -77,15 +76,11 @@ inline vector<node> Construct(array* leaves) {
 
 void UpdatePath(vector<node> &tree, short int leaveID) {
   int pivot = leaveID;
-  int LC  = 0, RC = 0;
+  int LC = 0, RC = 0;
   
   while (pivot > 1) {
-    pivot = parentID(pivot);
-    LC = L_ChildID(pivot);
-    RC = R_ChildID(pivot);
-    
-    if (tree[tree[pivot].mx].mx > tree[leaveID].mx) {
-      cout << "e - "<< tree[tree[pivot].mx].mx<<"_" << tree[leaveID].mx<<endl;
+    pivot = parentID(pivot);    
+    if (tree[tree[pivot].mx].mx > tree[leaveID].mx) {   
       tree[pivot].mn = leaveID;
       break;
     }
@@ -98,22 +93,34 @@ void UpdatePath(vector<node> &tree, short int leaveID) {
 
 int Replacemax(vector<node> &tree, int newMax) {
   int oldMax = tree[tree[1].mx].mx;
-  int index = tree[1].mx;
+  int pivot = tree[1].mx;
+  int leaveID = tree[1].mx;
+
+  tree[pivot].mx = newMax;
   
-  tree[tree[1].mx].mx = newMax;
-  UpdatePath(tree, index);
+  while (pivot > 1) {
+    pivot = parentID(pivot);
+    if (newMax < tree[tree[pivot].mn].mx){
+      tree[pivot].mx = tree[pivot].mn;
+      tree[pivot].mn = leaveID;
+    }
+    else {
+      tree[pivot].mx = leaveID;
+      break;
+  }
+}
+
 
   return oldMax;
 }
 
 void Visualize(vector<node> tree, array* leaves) {
   const int h = treeHeight(leaves->size);
+
   cout << "Array: ";
   for (int j = 0; j < leaves->size; j++) cout << leaves->l[j] << ' ';
 
   cout << endl << "Tournament tree: " << endl;
-   
-
   for (int j = 0; j <= h; j ++) {
     for (int i = firstLevelsId(j); i <= lastLevelsId(j); i ++) { 
       cout << i << "|" << tree[i].mx << ":" << tree[i].mn << "\t\t";
