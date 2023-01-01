@@ -95,17 +95,19 @@ int Replacemax(vector<node> &tree, int newMax) {
   int oldMax = tree[tree[1].mx].mx;
   int pivot = tree[1].mx;
   int leaveID = tree[1].mx;
-
+  int swapPTR = 0;
   tree[pivot].mx = newMax;
   
+
   while (pivot > 1) {
     pivot = parentID(pivot);
     if (newMax < tree[tree[pivot].mn].mx){
+      
       tree[pivot].mx = tree[pivot].mn;
       tree[pivot].mn = leaveID;
     }
     else {
-      tree[pivot].mx = leaveID;
+//      tree[pivot].mx = leaveID; // w sumie czy to jest potrzebne
       break;
   }
 }
