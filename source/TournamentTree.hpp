@@ -4,6 +4,7 @@
 #pragma once
 #include <vector>
 #include <cmath>
+#include "Array.hpp"
 using namespace std;
 
 
@@ -17,12 +18,12 @@ using namespace std;
 #define howMuchNodes(l, h) int(l - 1 - pow(2, h - 1)) // iloœæ wêz³ów w drzewie = l - 2^(h-1), gdzie l - iloœæ liœci, h - wysokoœæ drzewa  
 
 struct node { int mx; int mn; };            // struktura wêz³ów drzewa
-struct array { int* l; short int size; };   // struktura tablic 
 
 vector<node> Construct(array* leaves);
 void UpdatePath(vector<node>& tree, short int leaveID, int val);
-void Replacemax(vector<node>& tree, int newMax);
-
+void Replacemax(vector<node>& tree, int newMax);        // Replacemax dla jednego liœcia
+void nReplacemax(vector<node>& tree, array* n);
+void Visualize(vector<node> tree, array* leaves);
 
 inline vector<node> Construct(array* leaves) {
     const int h = treeHeight(leaves->size);   // wysokoœæ drzewa
@@ -63,6 +64,7 @@ void UpdatePath(vector<node>& tree, short int leaveID, int val) {
 }
 
 void Replacemax(vector<node>& tree, int newMax) {
+    cout << tree[tree[1].mx].mx << " ";
     short int pivot = tree[1].mx;
     short int leaveID = tree[1].mx;
     tree[leaveID].mx = newMax;   // ustawia now¹ wartoœæ val, zamiast max
@@ -74,6 +76,25 @@ void Replacemax(vector<node>& tree, int newMax) {
             tree[pivot].mn = leaveID;
             leaveID = tree[pivot].mx;
         }
-        else tree[pivot].mx = leaveID;
+        else {
+            tree[pivot].mx = leaveID;
+        }
+    }
+}
+
+void nReplacemax(vector<node>& tree, array* n) {
+  for (int i = 0; i < n->size; i++) Replacemax(tree, n->l[i]);
+  cout << endl;
+}
+
+void Visualize(vector<node> tree, array* leaves) {
+    const int h = treeHeight(leaves->size);
+
+    cout << endl << "Tournament tree: " << endl;
+    for (int j = 0; j <= h; j++) {
+        for (int i = firstLevelsId(j); i <= lastLevelsId(j); i++) {
+            cout << i << "|" << tree[i].mx << ":" << tree[i].mn << "\t\t";
+        }
+        cout << endl;
     }
 }
