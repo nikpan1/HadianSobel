@@ -20,13 +20,13 @@ array NewRandomArray(short int n) {
     array leaves;
     leaves.size = n;
     leaves.l = new int[leaves.size];
-    for (int i = 0; i <= leaves.size; i++) leaves.l[i] = rd(rng);
+    for (int i = 0; i < leaves.size; i++) leaves.l[i] = rd(rng);
 
     return leaves;
 }
 
 void printArray(array* arr) {
-    cout << "\nArray: ";
+    cout << "Array[0.."<< arr->size - 1 << "]: ";
     for (int i = 0; i < arr->size; i++) cout << arr->l[i] << " ";
     cout << endl;
 }
