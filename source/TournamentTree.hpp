@@ -38,7 +38,7 @@ void UpdatePath(vector<node>& tree, int pivot) {
 }
 
 
-inline vector<node> Construct(array* leaves, double& counter) {
+inline vector<node> Construct(array* leaves) {
   vector<node> tree(treeSize(leaves->size), {0, 0}); // drzewo turniejowe, indexowane od 1
   
   for (int i = 0; i < leaves->size; i ++) {
@@ -46,28 +46,22 @@ inline vector<node> Construct(array* leaves, double& counter) {
     tree[l_Id(i)].mx = leaves->l[i];
   }
 
-  for (int i = leaves->size - 1; i >= 1; i --) {
-    UpdatePath(tree, i);
-    counter ++;
-  }
-
+  for (int i = leaves->size - 1; i >= 1; i --) UpdatePath(tree, i);
   return tree;
 }
 
-void Replacemax(vector<node>& tree, int newMax, double& counter) {
+void Replacemax(vector<node>& tree, int newMax) {
   val(1) = newMax;
 
   int pivot = twig_Id(tree[1].mx);
   while (pivot > 1) {
     pivot = parentID(pivot);
     UpdatePath(tree, pivot);
-    counter ++;
   }
 }
 
 void nReplacemax(vector<node>& tree, array* n) {
-  double counter = 0;
-  for (int i = 0; i < n->size; i++) Replacemax(tree, n->l[i], counter);
+  for (int i = 0; i < n->size; i++) Replacemax(tree, n->l[i]);
   cout << endl;
 }
 
