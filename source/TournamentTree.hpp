@@ -84,8 +84,8 @@ void HadianSobel(array* list, int k) {
   vector<node> tree = Construct(&leaves);
   
   // czytanie oraz wywołanie Replacemax n-k+1 razy 
-  for (int i = 0; i < 2; i ++) {
-    cout << tree[0].mx << SEPARATOR;
+  for (int i = n - k + 1; i < n; i ++) {
+    cout << val(1) << SEPARATOR;
     Replacemax(tree, leaves.l[n-k + i]);
   }
 }
