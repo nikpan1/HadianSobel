@@ -21,7 +21,7 @@ using namespace std;
 
 struct node { int mx; int mn; };     // struktura węzłów drzewa
 
-vector<node> Construct(array* leaves, double& counter); // funkcja budująca strukturę drzewa turniejowego
+vector<node> Construct(array* leaves); // funkcja budująca strukturę drzewa turniejowego
 void UpdatePath(vector<node>& tree, int pivot);         // funkcja aktualizująca drzewo przechodząc od liścia wskazywanego przez pivot, aż do korzenia 
 void Replacemax(vector<node>& tree, int newVal);        // funkcja wstawiająca nową wartość na miejsce starego maximum drzewa turniejowego
 void HadianSobel(array* list, int k);                   // funkcja wykonująca algorytm hadiana-Sobela wyznaczając k największych wartości
@@ -86,7 +86,7 @@ void HadianSobel(array* list, int k) {
   // czytanie oraz wywołanie Replacemax n-k+1 razy 
   for (int i = n - k + 1; i < n; i ++) {
     cout << val(1) << SEPARATOR;
-    Replacemax(tree, leaves.l[n-k + i]);
+    Replacemax(tree, leaves.l[i]);
   }
 
   cout << val(1) << endl;
