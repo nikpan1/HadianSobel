@@ -4,10 +4,10 @@
 using namespace std;
 
 int main() {
-  auto q = NewRandomArray(10);
   
-  //printArray(&q);
-  HadianSobel(&q, 5);
-
+  for (int i = 2; i <= 50000; i = i + 2) {
+    auto q = NewRandomArray(i);
+    HadianSobel(&q, i / 2);
+  }
   return 0;
 }

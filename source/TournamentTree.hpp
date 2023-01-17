@@ -77,7 +77,6 @@ void Replacemax(vector<node>& tree, int newVal, double& counter) {
 }
 
 void HadianSobel(array* list, int k) {
-  double counter = list->size - 1;
   // rozmiar listy wejściowej
   int n = list->size; 
   // wydzielenie tablicy o rozmiarze n - k + 1
@@ -85,12 +84,11 @@ void HadianSobel(array* list, int k) {
   // tworzenie drzewa
   vector<node> tree = Construct(&leaves);
 
+  double counter = 0;
+
   // czytanie oraz wywołanie Replacemax n-k+1 razy 
-  for (int i = n - k + 1; i < n; i ++) {
-    //cout << val(1) << SEPARATOR;
-    Replacemax(tree, leaves.l[n-k + i], counter);
-  }
-  cout << counter <<endl;
+  Replacemax(tree, leaves.l[n-k + 1], counter);
+  cout << n << "\t" << counter <<endl;
   //cout << val(1) << endl;
 }
 
