@@ -15,7 +15,7 @@ void printArray(array* arr);
 array NewRandomArray(short int n) {
     random_device dev;
     mt19937 rng(dev());
-    uniform_int_distribution<mt19937::result_type> rd(100, 999);
+    uniform_int_distribution<mt19937::result_type> rd(1, 1000000);
 
     array leaves;
     leaves.size = n;

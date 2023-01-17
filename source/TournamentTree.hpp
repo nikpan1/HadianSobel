@@ -88,6 +88,8 @@ void HadianSobel(array* list, int k) {
     cout << val(1) << SEPARATOR;
     Replacemax(tree, leaves.l[n-k + i]);
   }
+
+  cout << val(1) << endl;
 }
 
 // _______________________
